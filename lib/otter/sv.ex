@@ -3,23 +3,10 @@ defmodule Otter.Sv do
   This module handles upcoming tcp connections.
   """
   use GenServer
+  alias Otter.Packet, as: Packet
 
   def start_link(listener) do
     GenServer.start_link(__MODULE__, listener, [])
-  end
-
-  def test_req() do
-    {:ok, socket} =
-      :gen_tcp.connect(
-        {127, 0, 0, 1},
-        8080,
-        [:binary, packet: 2, active: false]
-      )
-
-    :ok = :gen_tcp.send(socket, <<42>>)
-    {:ok, _resp} = :gen_tcp.recv(socket, 0)
-    :ok = :gen_tcp.close(socket)
-    :ok
   end
 
   def init(listener) do
@@ -41,8 +28,8 @@ defmodule Otter.Sv do
     {:reply, :ok, state}
   end
 
-  def handle_info({:tcp, socket, <<42>>}, state) do
-    IO.puts("Received a request")
+  def handle_info({:tcp, socket, packet}, state) do
+    Packet.handle_packet(packet) |> IO.inspect()
     :gen_tcp.send(socket, <<42>>)
     {:noreply, state}
   end
