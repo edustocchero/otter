@@ -23,7 +23,7 @@ defmodule Otter.Packet do
     {:ok, [:get, name: name]}
   end
 
-  def handle_set(<<length::8, name::binary-size(length), rest::binary>>) do
+  defp handle_set(<<length::8, name::binary-size(length), rest::binary>>) do
     handle_set_payload(rest, [:set, name: name])
   end
 

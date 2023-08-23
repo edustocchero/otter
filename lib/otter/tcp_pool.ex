@@ -1,7 +1,7 @@
-defmodule Otter.DynSup do
+defmodule Otter.TcpPool do
   @moduledoc """
   This module is reponsible to dynamically handle multiple connections
-  in the same listener by starting `Otter.Sv` childs.
+  in the same tcp listener by starting `Otter.Acceptor` childs.
   """
   use DynamicSupervisor
 
@@ -21,12 +21,12 @@ defmodule Otter.DynSup do
   end
 
   @doc """
-  Starts a `Otter.Sv` child with the given `listener`.
+  Starts a `Otter.Acceptor` child with the given `listener`.
   """
   def start_child(listener) do
     spec = %{
-      id: Otter.Sv,
-      start: {Otter.Sv, :start_link, [listener]},
+      id: Otter.Acceptor,
+      start: {Otter.Acceptor, :start_link, [listener]},
       restart: :temporary,
       shutdown: 500
     }

@@ -1,4 +1,4 @@
-defmodule Otter.Sv do
+defmodule Otter.Acceptor do
   @moduledoc """
   This module handles upcoming tcp connections.
   """

@@ -13,8 +13,8 @@ defmodule Otter.Sup do
 
     children = [
       %{
-        id: Otter.DynSup,
-        start: {Otter.DynSup, :start_link, []}
+        id: Otter.TcpPool,
+        start: {Otter.TcpPool, :start_link, []}
       },
       {Task, init_children(listener)}
     ]
@@ -26,7 +26,7 @@ defmodule Otter.Sup do
   defp init_children(listener) do
     fn ->
       Enum.to_list(1..10)
-      |> Enum.each(fn _ -> Otter.DynSup.start_child(listener) end)
+      |> Enum.each(fn _ -> Otter.TcpPool.start_child(listener) end)
     end
   end
 end
