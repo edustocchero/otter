@@ -3,15 +3,23 @@ defmodule Otter.Packet do
   This module transforms binary packets into elixir structures.
   """
 
-  def handle_packet(<<42>>), do: handle_heartbeat()
+  @heartbeat 42
+  @get 43
+  @set 44
+  @forget 45
 
-  def handle_packet(<<43, rest::binary>>), do: handle_get(rest)
+  @doc """
+  Parses a binary packet into a keyword list.
+  """
+  def handle(<<@heartbeat>>), do: handle_heartbeat()
 
-  def handle_packet(<<44, rest::binary>>), do: handle_set(rest)
+  def handle(<<@get, rest::binary>>), do: handle_get(rest)
 
-  def handle_packet(<<45, rest::binary>>), do: handle_forget(rest)
+  def handle(<<@set, rest::binary>>), do: handle_set(rest)
 
-  def handle_packet(_packet), do: error(:unexpected_packet)
+  def handle(<<@forget, rest::binary>>), do: handle_forget(rest)
+
+  def handle(_packet), do: error(:unexpected_packet)
 
   defp handle_heartbeat() do
     IO.puts("Received a heartbeat")

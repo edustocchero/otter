@@ -16,7 +16,7 @@ defmodule Otter.Acceptor do
 
   def handle_cast(:accept, listener) do
     {:ok, _socket} = :gen_tcp.accept(listener)
-    Otter.DynSup.start_child(listener)
+    Otter.TcpPool.start_child(listener)
     {:noreply, listener}
   end
 
@@ -29,7 +29,7 @@ defmodule Otter.Acceptor do
   end
 
   def handle_info({:tcp, socket, packet}, state) do
-    Packet.handle_packet(packet) |> IO.inspect()
+    Packet.handle(packet) |> IO.inspect()
     :gen_tcp.send(socket, <<42>>)
     {:noreply, state}
   end
