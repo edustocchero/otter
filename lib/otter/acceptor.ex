@@ -3,7 +3,7 @@ defmodule Otter.Acceptor do
   This module handles upcoming tcp connections.
   """
   use GenServer
-  alias Otter.Packet, as: Packet
+  alias Otter.Packet.Request, as: Request
 
   def start_link(listener) do
     GenServer.start_link(__MODULE__, listener, [])
@@ -29,7 +29,7 @@ defmodule Otter.Acceptor do
   end
 
   def handle_info({:tcp, socket, packet}, state) do
-    Packet.handle(packet) |> IO.inspect()
+    Request.handle(packet) |> IO.inspect()
     :gen_tcp.send(socket, <<42>>)
     {:noreply, state}
   end
